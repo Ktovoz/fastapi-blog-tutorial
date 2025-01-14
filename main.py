@@ -75,5 +75,5 @@ if __name__ == "__main__":
         server = WebSocketServer(**config)
 
         # 启动服务器和webview
-        # server.start_server_and_web()  # 如果需要同时启动服务器和webview，请取消此行注释
-        server.start_server()  # 仅启动服务器
+        server.start_server_and_web()  # 如果需要同时启动服务器和webview，请取消此行注释
+        # server.start_server()  # 仅启动服务器
