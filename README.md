@@ -95,24 +95,42 @@
 ```bash
 pip install -r requirements.txt
 ```
-
 ### 2. 启动应用
+
+#### 2.1 启动 FastAPI 服务器
 
 在终端中运行以下命令来启动 **FastAPI** 服务器：
 
 ```bash
-python app/server.py
+python app/main.py --server
 ```
-
-### 3. 启动桌面应用
+#### 2.2 启动桌面应用
 
 在终端中运行以下命令来启动 **PyWebview** 桌面应用：
 
 ```bash
 python app/main.py
 ```
+#### 2.3 参数说明
 
-### 4. 访问主页
+你可以通过以下参数来配置应用的启动行为：
+
+- `--server`: 仅启动 FastAPI 服务器，不启动 PyWebview 桌面应用。
+- `--host <地址>`: 指定 FastAPI 服务器监听的地址，默认为 `0.0.0.0`。
+- `--port <端口>`: 指定 FastAPI 服务器监听的端口，默认为 `8000`。
+- `--index-path <路径>`: 指定网页入口文件的路径，默认为 `templates/index.html`。
+
+例如，如果你想启动服务器并指定监听地址和端口，可以运行：
+
+```bash
+python app/main.py --server --host 127.0.0.1 --port 8080
+```
+如果你想启动桌面应用并指定网页入口文件路径，可以运行：
+
+```bash
+python app/main.py --index-path templates/custom_index.html
+```
+### 3. 访问主页
 
 打开浏览器，访问 [http://127.0.0.1:8000](http://127.0.0.1:8000)，你应该能够看到主页。
 
