@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket 客户端 v1.1</title>
+<style>
+    :root {
+        /* 颜色变量 */
+        --primary-color: #6C7A89;
+        --secondary-color: #5C6A79;
+        --background-gradient: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+        --text-color: #2C3E50;
+        --white: rgba(255, 255, 255, 0.95);
+        --success-color: #27ae60;
+        --error-color: #E74C3C;
+    }
+
+    /* 基础样式 */
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        padding: 20px;
+        background: var(--background-gradient);
+        color: var(--text-color);
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    /* 背景动画（性能优化：减少动画复杂度） */
+    @keyframes moveBackground {
+        0% {
+            background-position: 0% 0%;
+        }
+        100% {
+            background-position: 100% 100%;
+        }
+    }
+
+    body::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(245, 247, 250, 0.8), rgba(195, 207, 226, 0.8));
+        z-index: -1;
+        animation: moveBackground 20s linear infinite;
+        will-change: background-position;
+    }
+
+    /* 标题样式 */
+    h1 {
+        margin-bottom: 20px;
+        font-size: clamp(2rem, 5vw, 2.5rem); /* 响应式字体大小 */
+        color: #34495e;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    /* 通用动画 */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* 按钮容器 */
+    .button-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px 0;
+        flex-wrap: wrap;
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    /* 通用按钮样式 */
+    .button {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: #fff;
+        border: none;
+        padding: 12px 24px;
+        cursor: pointer;
+        border-radius: 30px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: var(--transition);
+        box-shadow: var(--box-shadow);
+    }
+
+    .button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        opacity: 0.9;
+    }
+
+    .button:active {
+        transform: translateY(0) scale(0.95);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 消息框样式 */
+    #messages {
+        margin: 20px 0;
+        padding: 20px;
+        width: 90%;
+        max-width: 800px;
+        height: 300px;
+        overflow-y: scroll;
+        background: var(--white);
+        border-radius: 15px;
+        box-shadow: var(--box-shadow);
+        backdrop-filter: blur(10px);
+    }
+
+    #messages::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #messages::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+    }
+
+    #messages::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 4px;
+    }
+
+    #messages::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    /* 消息样式 */
+    .message {
+        padding: 12px;
+        border-radius: 15px;
+        margin-bottom: 15px;
+        max-width: 80%;
+        word-wrap: break-word;
+        background: var(--white);
+        box-shadow: var(--box-shadow);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        opacity: 0;
+        animation: fadeIn 0.5s forwards ease-in-out;
+        transition: var(--transition);
+        will-change: transform, opacity;
+    }
+
+    .message-client {
+        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        margin-left: auto;
+        border-radius: 15px 15px 0 15px;
+    }
+
+    .message-server {
+        background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+        margin-right: auto;
+        border-radius: 15px 15px 15px 0;
+        color: #2d3748;
+    }
+
+    .message:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .message p {
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .message time {
+        font-size: 12px;
+        color: #7f8c8d;
+        margin-left: 10px;
+    }
+
+    /* 输入框容器 */
+    .input-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 90%;
+        max-width: 800px;
+        margin-top: 20px;
+        gap: 10px;
+    }
+
+    input[type="text"] {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 30px;
+        outline: none;
+        background: var(--white);
+        font-size: 14px;
+        color: inherit;
+        transition: var(--transition);
+    }
+
+    input[type="text"]:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 12px rgba(108, 122, 137, 0.3);
+        background: rgba(255, 255, 255, 1);
+    }
+
+    /* 连接状态 */
+    .connection-status {
+        margin-top: 10px;
+        font-size: 14px;
+        color: inherit;
+        display: flex;
+        animation: fadeIn 0.8s ease-in-out;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .connection-status.connected {
+        color: var(--success-color);
+    }
+
+    .connection-status.disconnected {
+        color: var(--error-color);
+    }
+
+    .connection-status .status-icon {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: currentColor;
+        animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(0.8);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(0.8);
+        }
+    }
+
+    /* Toast 提示 */
+    .toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--primary-color);
+        color: #fff;
+        padding: 16px 32px;
+        border-radius: 50px;
+        box-shadow: var(--box-shadow);
+        opacity: 0;
+        transform: translate(-50%, 20px);
+        transition: var(--transition);
+        font-size: 16px;
+        z-index: 1000;
+    }
+
+    .toast.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    /* 加载动画 */
+    .loading {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* 设置面板 */
+    .settings-panel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--white);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: var(--box-shadow);
+        backdrop-filter: blur(10px);
+        z-index: 1001;
+        display: none;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+    }
+
+    .settings-panel.show {
+        display: block;
+    }
+
+    .settings-panel h2 {
+        margin-top: 0;
+        font-size: 1.8rem;
+        color: #34495e;
+        margin-bottom: 30px;
+    }
+
+    .settings-panel label {
+        display: block;
+        margin: 10px 0 5px;
+        font-size: 16px;
+        color: var(--text-color);
+        text-align: left;
+    }
+
+    .settings-panel input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        font-size: 16px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+
+    .settings-panel input::placeholder {
+        text-align: left;
+    }
+
+    .settings-panel button {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .settings-panel button:hover {
+        background: linear-gradient(135deg, #5C6A79, #4A5867);
+    }
+
+    /* 遮罩层 */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        display: none;
+    }
+
+    .overlay.show {
+        display: block;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
+
+        h1 {
+            font-size: 2rem;
+        }
+
+        .button-container {
+            flex-direction: column;
+        }
+
+        #messages {
+            width: 100%;
+            height: 200px;
+        }
+
+        .input-container {
+            flex-direction: column;
+        }
+    }
+</style>
+</head>
+<body>
+<h1>WebSocket 客户端 v1.1</h1>
+<div id="messages"></div>
+<div class="button-container">
+    <button class="button" onclick="sendMessage('echo', 'Hello Server!')">
+        💬 发送 Echo 命令
+    </button>
+    <button class="button" onclick="sendMessage('time', 'Get Time')">
+        🕒 发送 Time 命令
+    </button>
+    <button class="button" onclick="clearMessages()">
+        🗑️ 清除消息
+    </button>
+    <button class="button" onclick="reconnect()">
+        🔄 重新连接
+    </button>
+    <button class="button" onclick="openSettings()">
+        ⚙️ 设置
+    </button>
+</div>
+<div class="input-container">
+    <input type="text" id="messageInput" placeholder="输入消息...">
+    <button class="button" onclick="sendMessage('custom', document.getElementById('messageInput').value.trim())">
+        📤 发送
+    </button>
+</div>
+<div id="connectionStatus" class="connection-status">
+    <div class="status-icon"></div>
+    <span>连接状态：未连接</span>
+</div>
+<div id="toast" class="toast"></div>
+
+<div class="overlay" id="overlay"></div>
+<div class="settings-panel" id="settingsPanel">
+    <h2>设置</h2>
+    <label for="serverPort">端口号</label>
+    <input type="text" id="serverPort" placeholder="例如: 8000">
+    <label for="serverPath">路径</label>
+    <input type="text" id="serverPath" placeholder="例如: /ws">
+    <button onclick="saveSettings()">保存</button>
+</div>
+
+<script>
+    let ws;
+    const connectionStatus = document.getElementById('connectionStatus');
+    const toast = document.getElementById('toast');
+    const overlay = document.getElementById('overlay');
+    const settingsPanel = document.getElementById('settingsPanel');
+    const serverPortInput = document.getElementById('serverPort');
+    const serverPathInput = document.getElementById('serverPath');
+
+    function showToast(message, duration = 2000) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), duration);
+    }
+
+    function openSettings() {
+        overlay.classList.add('show');
+        settingsPanel.classList.add('show');
+        const savedPort = localStorage.getItem('serverPort') || '8000';
+        const savedPath = localStorage.getItem('serverPath') || '/ws';
+        serverPortInput.value = savedPort;
+        serverPathInput.value = savedPath;
+    }
+
+    function saveSettings() {
+        const port = serverPortInput.value.trim();
+        const path = serverPathInput.value.trim();
+        localStorage.setItem('serverPort', port);
+        localStorage.setItem('serverPath', path);
+        overlay.classList.remove('show');
+        settingsPanel.classList.remove('show');
+        reconnect();
+    }
+
+    function initWebSocket() {
+        const port = localStorage.getItem('serverPort') || '8000';
+        const path = localStorage.getItem('serverPath') || '/ws';
+        ws = new WebSocket(`ws://localhost:${port}${path}`);
+        ws.onopen = () => {
+            addMessage('已连接到服务器', 'server');
+            connectionStatus.innerHTML = `<div class="status-icon"></div><span>连接状态：已连接</span>`;
+            connectionStatus.classList.add('connected');
+            connectionStatus.classList.remove('disconnected');
+            showToast('已连接到服务器');
+        };
+        ws.onmessage = e => addMessage(`服务器消息: ${e.data}`, 'server');
+        ws.onclose = () => {
+            addMessage('已断开与服务器的连接', 'server');
+            connectionStatus.innerHTML = `<div class="status-icon"></div><span>连接状态：已断开</span>`;
+            connectionStatus.classList.add('disconnected');
+            connectionStatus.classList.remove('connected');
+            showToast('已断开与服务器的连接');
+        };
+        ws.onerror = e => {
+            addMessage(`WebSocket 错误: ${e.message}`, 'server');
+            connectionStatus.innerHTML = `<div class="status-icon"></div><span>连接状态：错误</span>`;
+            connectionStatus.classList.add('disconnected');
+            showToast('WebSocket 错误: ' + e.message);
+        };
+    }
+
+    function sendMessage(command, data) {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({command, data}));
+            addMessage(`客户端消息: ${data}`, 'client');
+            document.getElementById('messageInput').value = '';
+            showToast('消息已发送');
+            const input = document.getElementById('messageInput');
+            input.classList.add('input-flash');
+            setTimeout(() => input.classList.remove('input-flash'), 500);
+        } else {
+            addMessage('WebSocket 连接未打开，请重新连接', 'server');
+            showToast('WebSocket 连接未打开，请重新连接');
+        }
+    }
+
+    function clearMessages() {
+        document.getElementById('messages').innerHTML = '';
+        showToast('消息已清除');
+    }
+
+    function reconnect() {
+        clearMessages();
+        connectionStatus.innerHTML = `<div class="loading"></div><span>连接状态：重新连接中...</span>`;
+        initWebSocket();
+        showToast('正在重新连接...');
+    }
+
+    function addMessage(message, type) {
+        const messagesDiv = document.getElementById('messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', `message-${type}`);
+        messageDiv.innerHTML = `<p>${message}</p><time datetime="${new Date().toISOString()}">${new Date().toLocaleTimeString()}</time>`;
+        messagesDiv.appendChild(messageDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    document.getElementById('messageInput').addEventListener('keypress', e => {
+        if (e.key === 'Enter') sendMessage('custom', document.getElementById('messageInput').value.trim());
+    });
+
+    initWebSocket();
+    function openSettings() {
+    overlay.classList.add('show');
+    settingsPanel.classList.add('show');
+    const savedPort = localStorage.getItem('serverPort') || '8000';
+    const savedPath = localStorage.getItem('serverPath') || '/ws';
+    serverPortInput.value = savedPort;
+    serverPathInput.value = savedPath;
+
+    // 添加点击遮罩层关闭设置面板的功能
+    overlay.addEventListener('click', closeSettings);
+}
+
+function closeSettings() {
+    overlay.classList.remove('show');
+    settingsPanel.classList.remove('show');
+    overlay.removeEventListener('click', closeSettings); // 移除事件监听器
+}
+
+function saveSettings() {
+    const port = serverPortInput.value.trim();
+    const path = serverPathInput.value.trim();
+    localStorage.setItem('serverPort', port);
+    localStorage.setItem('serverPath', path);
+    closeSettings(); // 调用 closeSettings 函数
+    reconnect();
+}
+
+settingsPanel.addEventListener('click', function(event) {
+    event.stopPropagation(); // 阻止事件冒泡
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>信息页面</title>
+    <link href="{{ static_file_url }}" rel="stylesheet">
+</head>
+<body>
+    <h1>信息页面</h1>
+    <p>请求路径: {{ request.url.path }}</p>
+    <p>请求方法: {{ request.method }}</p>
+    <p>客户端地址: {{ request.client.host }}:{{ request.client.port }}</p>
+    <p>查询参数: {{ request.query_params }}</p>
+    <p>自定义参数: {{ custom_param }}</p>
+    <p>数字参数: {{ number_param }}</p>
+    <p>列表参数: {{ list_param }}</p>
+    <ul>
+        {% for item in list_param %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+    <p>字典参数: {{ dict_param }}</p>
+    <ul>
+        {% for key, value in dict_param.items() %}
+            <li>{{ key }}: {{ value }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
