@@ -8,7 +8,7 @@
 
 ### 欢迎学习与使用
 
-我们非常欢迎各位开发者学习本项目的代码结构和技术实现，同时也鼓励大家以本项目为基础，搭建自己的应用。如果你有任何问题或需要帮助，请随时联系我们的社区或提交 [Issue](https://github.com/fastapi-blog-tutorial/issues)。
+我们非常欢迎各位开发者学习本项目的代码结构和技术实现，同时也鼓励大家以本项目为基础，搭建自己的应用。如果你有任何问题或需要帮助，请随时联系我们的社区或提交 [Issue](https://github.com/Ktovoz/fastapi-blog-tutorial/issues)。
 
 ## 主要特性
 
