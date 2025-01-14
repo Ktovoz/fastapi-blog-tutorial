@@ -1,6 +1,36 @@
-# 🚀 FastAPI & PyWebview Blog Application
+<div align="center">
+  <h3>🌟 Star 本项目</h3>
+  <p>如果你觉得这个项目对你有帮助，请给它一个 ⭐️ 支持！</p>
+</div>
 
-这是一个使用 **FastAPI** 和 **PyWebview** 构建的完整 Web 应用示例项目，旨在为学习如何构建桌面博客应用提供一个详细的参考。项目展示了如何结合 **WebSocket** 和 **模板渲染** 技术，创建一个功能丰富的桌面 Web 应用。
+---
+
+<div align="center">
+  <h3>🚀 开始你的开发之旅</h3>
+  <p>现在就克隆项目，开始你的开发之旅吧！</p>
+  <pre><code>git clone https://github.com/Ktovoz/fastapi-blog-tutorial.git</code></pre>
+</div>
+
+---
+
+<div align="center">
+  <h3>📌 重要提示</h3>
+  <p>本项目仍在积极开发中，可能会有重大更改。请定期查看更新。</p>
+</div>
+
+---
+
+<div align="center">
+  <h3>📊 项目状态</h3>
+  <img src="https://img.shields.io/github/last-commit/Ktovoz/fastapi-blog-tutorial" alt="Last Commit">
+  <img src="https://img.shields.io/github/issues/Ktovoz/fastapi-blog-tutorial" alt="Issues">
+  <img src="https://img.shields.io/github/stars/Ktovoz/fastapi-blog-tutorial" alt="Stars">
+  <img src="https://img.shields.io/github/forks/Ktovoz/fastapi-blog-tutorial" alt="Forks">
+</div>
+
+---
+
+# 🚀 FastAPI & PyWebview Blog Application
 
 ## 📖 简介
 
@@ -13,22 +43,28 @@
 此外，你可以参考作者撰写的详细博客文章，了解更多的开发细节和技巧：
 - [FastAPI & PyWebview 博客应用开发教程](https://blog.csdn.net/Ktovoz/article/details/14513850)
 
+---
+
 ## 🎯 主要特性
 
-- 基于 **FastAPI** 的 RESTful API 设计
-- 使用 **WebSocket** 实现实时通信
-- 通过 **Jinja2** 模板引擎渲染动态页面
-- 使用 **PyWebview** 创建桌面应用程序
-- 完善的错误处理和日志记录
-- 易于扩展和维护的项目结构
+- **基于 FastAPI 的 RESTful API 设计**
+- **使用 WebSocket 实现实时通信**
+- **通过 Jinja2 模板引擎渲染动态页面**
+- **使用 PyWebview 创建桌面应用程序**
+- **完善的错误处理和日志记录**
+- **易于扩展和维护的项目结构**
+
+---
 
 ## 🛠️ 技术栈
 
-- 后端框架：**FastAPI**
-- 实时通信：**WebSocket**
-- 模板引擎：**Jinja2**
-- 桌面应用封装：**PyWebview**
-- 异步支持：**Asyncio**
+- **后端框架**：FastAPI
+- **实时通信**：WebSocket
+- **模板引擎**：Jinja2
+- **桌面应用封装**：PyWebview
+- **异步支持**：Asyncio
+
+---
 
 ## 🚀 快速开始
 
@@ -60,6 +96,8 @@ python app/main.py
 
 打开浏览器，访问 [http://127.0.0.1:8000](http://127.0.0.1:8000)，你应该能够看到主页。
 
+---
+
 ## 📂 项目结构
 
 ```
@@ -74,19 +112,27 @@ python app/main.py
 └── README.md            # 项目介绍文件
 ```
 
+---
+
 ## 🌐 WebSocket 集成
 
 本项目通过 **WebSocket** 实现实时通信，例如实时更新博客文章的评论。WebSocket 的相关代码主要位于 [routers](./routers/) 目录下。
 
+---
+
 ## 🎨 模板渲染
 
 本项目使用 **Jinja2** 作为模板引擎，模板文件位于 [templates](./templates/) 目录下。通过 **FastAPI** 的 `HTMLResponse` 和模板引擎集成，可以轻松实现动态页面的渲染。
+
+---
 
 ## ❓ 常见问题
 
 ### Q: 如何添加新的功能？
 
 **A**: 可以在 [routers](app/routers/) 目录下添加新的路由和处理函数，同时在 [templates](./templates/) 目录下添加相应的模板文件。
+
+---
 
 ## 🤝 贡献指南
 
@@ -99,7 +145,43 @@ python app/main.py
 5. **推送更改**：将更改推送到你的远程仓库。
 6. **提交 Pull Request**：在 GitHub 上提交 Pull Request，描述你的更改内容。
 
+---
+
 ## 📜 许可证
 
 本项目采用 **MIT** 协议，详情请参考 [LICENSE](LICENSE) 文件。
 
+---
+
+<div align="center">
+  <h3>📚 相关资源</h3>
+  <ul>
+    <li><a href="https://fastapi.tiangolo.com/">FastAPI 官方文档</a></li>
+    <li><a href="https://pywebview.flowrl.com/">PyWebview 官方文档</a></li>
+    <li><a href="https://jinja.palletsprojects.com/">Jinja2 官方文档</a></li>
+  </ul>
+</div>
+
+---
+
+<div align="center">
+  <h3>🎉 感谢支持</h3>
+  <p>感谢所有贡献者和用户的支持！</p>
+  <a href="https://github.com/Ktovoz/fastapi-blog-tutorial/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=Ktovoz/fastapi-blog-tutorial" />
+  </a>
+</div>
+
+---
+
+<div align="center">
+  <h3>📌 标签</h3>
+  <p>#FastAPI #PyWebview #WebSocket #Jinja2 #Python #DesktopApp</p>
+</div>
+
+---
+
+<div align="center">
+  <h3>📬 联系我们</h3>
+  <p>有任何问题或建议？欢迎通过 <a href="https://github.com/Ktovoz/fastapi-blog-tutorial/issues">GitHub Issues</a> 联系我们。</p>
+</div>
