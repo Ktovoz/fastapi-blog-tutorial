@@ -8,7 +8,7 @@
 
 ### 欢迎学习与使用
 
-我们非常欢迎各位开发者学习本项目的代码结构和技术实现，同时也鼓励大家以本项目为基础，搭建自己的应用。如果你有任何问题或需要帮助，请随时联系我们的社区或提交 [Issue](https://github.com/your-repo/issues)。
+我们非常欢迎各位开发者学习本项目的代码结构和技术实现，同时也鼓励大家以本项目为基础，搭建自己的应用。如果你有任何问题或需要帮助，请随时联系我们的社区或提交 [Issue](https://github.com/fastapi-blog-tutorial/issues)。
 
 ## 主要特性
 
@@ -73,17 +73,17 @@ python app.py
 
 ## WebSocket 集成
 
-本项目通过 **WebSocket** 实现实时通信，例如实时更新博客文章的评论。WebSocket 的相关代码主要位于 [routers](app/routers/) 目录下。
+本项目通过 **WebSocket** 实现实时通信，例如实时更新博客文章的评论。WebSocket 的相关代码主要位于 [routers](./routers/) 目录下。
 
 ## 模板渲染
 
-本项目使用 **Jinja2** 作为模板引擎，模板文件位于 [templates](app/templates/) 目录下。通过 **FastAPI** 的 `HTMLResponse` 和模板引擎集成，可以轻松实现动态页面的渲染。
+本项目使用 **Jinja2** 作为模板引擎，模板文件位于 [templates](./templates/) 目录下。通过 **FastAPI** 的 `HTMLResponse` 和模板引擎集成，可以轻松实现动态页面的渲染。
 
 ## 常见问题
 
 ### Q: 如何添加新的功能？
 
-**A**: 可以在 [routers](app/routers/) 目录下添加新的路由和处理函数，同时在 [templates](app/templates/) 目录下添加相应的模板文件。
+**A**: 可以在 [routers](app/routers/) 目录下添加新的路由和处理函数，同时在 [templates](./templates/) 目录下添加相应的模板文件。
 
 ## 贡献指南
 
