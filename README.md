@@ -61,8 +61,8 @@
 我们非常欢迎各位开发者学习本项目的代码结构和技术实现，同时也鼓励大家以本项目为基础，搭建自己的应用。如果你有任何问题或需要帮助，请随时联系我们的社区或提交 [Issue](https://github.com/Ktovoz/fastapi-blog-tutorial/issues)。
 
 此外，你可以参考作者撰写的详细博客文章，了解更多的开发细节和技巧：
-- [FastAPI & PyWebview 博客应用开发教程](https://blog.csdn.net/Ktovoz/article/details/14513850)
-
+- [Ktovoz FastAPI & PyWebview 博客应用开发教程]([https://www.ktovoz.com/blog/GUI/%E6%89%93%E9%80%A0Python%E5%BA%94%E7%94%A8%E7%95%8C%E9%9D%A2])
+- [CSDN FastAPI & PyWebview 博客应用开发教程]([https://blog.csdn.net/Ktovoz/article/details/145138503?spm=1001.2014.3001.5501])
 ---
 
 ## 🎯 主要特性
